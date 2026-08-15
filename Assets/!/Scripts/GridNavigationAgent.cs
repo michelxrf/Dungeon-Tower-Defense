@@ -4,8 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// Agent that navigates along a path calculated by GridManager.
-/// Manages node reservations and proximity spacing so agents form a queue and never overlap,
-/// even when traversing intersecting/overlapping grid paths.
+/// Uses MobVision for physical obstacle detection and node reservations
+/// to prevent multiple agents from disputing the same grid node.
 /// </summary>
 public class GridNavigationAgent : MonoBehaviour
 {
@@ -16,9 +16,9 @@ public class GridNavigationAgent : MonoBehaviour
     [Header("Vision & Obstacles")]
     [SerializeField] private MobVision _mobVision;
 
-    [Header("Queue & Collision Settings")]
-    [SerializeField] private float _stoppingDistance = 0.8f;
-    [SerializeField] private float _nodeReservationBuffer = 0.2f;
+    [Header("Node Reservation Settings")]
+    [Tooltip("The distance from the node at which the agent will consider itself to have reached the node. NEED TO BE HALF THE SIZE OF A GRID CELL")]
+    [SerializeField] private float _nodeReservationDistance = 0.5f;
 
     [Header("Path Selection")]
     [SerializeField] private int _pathIndex = 0;
@@ -29,6 +29,9 @@ public class GridNavigationAgent : MonoBehaviour
     private float _currentDistance = 0f;
     private int _currentNodeIndex = 0;
     private bool _isMoving = false;
+
+    // The next node this agent has successfully reserved.
+    private GridNavigationNode _reservedNode;
 
     public float MoveSpeed
     {
@@ -74,6 +77,8 @@ public class GridNavigationAgent : MonoBehaviour
         {
             GridManager.Instance.UnregisterAgent(this);
         }
+
+        _reservedNode = null;
     }
 
     /// <summary>
@@ -81,7 +86,9 @@ public class GridNavigationAgent : MonoBehaviour
     /// </summary>
     public void StartFollowingPath()
     {
-        GridManager manager = GridManager.Instance != null ? GridManager.Instance : FindAnyObjectByType<GridManager>();
+        GridManager manager = GridManager.Instance != null
+            ? GridManager.Instance
+            : FindAnyObjectByType<GridManager>();
 
         if (manager == null)
         {
@@ -106,12 +113,15 @@ public class GridNavigationAgent : MonoBehaviour
             return;
         }
 
-        Vector3[] controlPoints = _pathNodes.Select(n => n.Position).ToArray();
+        Vector3[] controlPoints = _pathNodes
+            .Select(n => n.Position)
+            .ToArray();
+
         _polyline = new Polyline(controlPoints);
 
         if (_polyline == null || _polyline.TotalLength <= 0f)
         {
-            Debug.LogWarning("[GridNavigationAgent] No valid path spline built.");
+            Debug.LogWarning("[GridNavigationAgent] No valid path polyline built.");
             _isMoving = false;
             return;
         }
@@ -120,57 +130,40 @@ public class GridNavigationAgent : MonoBehaviour
 
         _currentDistance = 0f;
         _currentNodeIndex = 0;
+        _reservedNode = null;
         _isMoving = true;
 
         transform.position = _polyline.EvaluateDistance(0f);
 
-        // Try to reserve start node
+        // Reserve and occupy the starting node.
         manager.TryReserveNode(_pathNodes[0], this);
         manager.OccupyNode(_pathNodes[0], this);
+
+        // Face the first direction of the path.
+        UpdateRotation();
     }
 
     private void Update()
     {
-        if (!_isMoving || _polyline == null || _polyline.TotalLength <= 0f || _pathNodes == null || _pathNodes.Count == 0) return;
+        if (!_isMoving ||
+            _polyline == null ||
+            _polyline.TotalLength <= 0f ||
+            _pathNodes == null ||
+            _pathNodes.Count == 0)
+        {
+            return;
+        }
 
         GridManager manager = GridManager.Instance;
-        if (manager == null) return;
 
-        // Determine target distance bound based on node reservation and proximity to agent ahead
-        float maxAllowedDistance = GetMaxAllowedDistance(manager);
+        if (manager == null)
+            return;
 
-        if (_currentDistance < maxAllowedDistance)
-        {
-            float nextDistance = Mathf.Min(_currentDistance + _moveSpeed * Time.deltaTime, maxAllowedDistance);
-            _currentDistance = nextDistance;
-        }
+        // Determine whether the agent can enter the next node.
+        if (!CanAdvanceToNextNode(manager))
+            return;
 
-        // Check node progression and occupation handoff
-        UpdateNodeOccupation(manager);
-
-        // Position & Rotation update
-        Vector3 targetPosition = _polyline.EvaluateDistance(_currentDistance);
-        
-        if(transform.position != targetPosition)
-        {
-            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position, Vector3.up);
-            transform.position = targetPosition;
-        }
-
-        // End of path handling
-        if (_currentDistance >= _polyline.TotalLength - 0.01f && _currentNodeIndex >= _pathNodes.Count - 1)
-        {
-            manager.ReleaseNode(_pathNodes[_currentNodeIndex], this);
-            _isMoving = false;
-        }
-    }
-
-    /// <summary>
-    /// Calculates how far along the spline this agent is allowed to advance without colliding with another agent or entering an unreserved node.
-    /// </summary>
-    private float GetMaxAllowedDistance(GridManager manager)
-    {
-        // 0. MobVision Obstacle Constraint
+        // MobVision handles physical obstacles and other agents.
         if (_mobVision == null)
         {
             _mobVision = GetComponentInChildren<MobVision>();
@@ -178,83 +171,203 @@ public class GridNavigationAgent : MonoBehaviour
 
         if (_mobVision != null && !_mobVision.IsPathClear())
         {
-            return _currentDistance;
+            return;
         }
 
-        float maxDist = _polyline.TotalLength;
+        // Move forward.
+        _currentDistance = Mathf.Min(
+            _currentDistance + _moveSpeed * Time.deltaTime,
+            _polyline.TotalLength
+        );
 
-        // 1. Node Reservation Constraint
-        if (_currentNodeIndex + 1 < _pathNodes.Count)
+        // Check node progression and occupation handoff.
+        UpdateNodeOccupation(manager);
+
+        // Position & Rotation update.
+        UpdateTransform();
+
+        // End of path handling.
+        if (_currentDistance >= _polyline.TotalLength - 0.01f &&
+            _currentNodeIndex >= _pathNodes.Count - 1)
         {
-            GridNavigationNode nextNode = _pathNodes[_currentNodeIndex + 1];
-            float nextNodeDistance = _polyline.GetPointDistance(_currentNodeIndex + 1);
+            manager.ReleaseNode(
+                _pathNodes[_currentNodeIndex],
+                this
+            );
 
-            // Attempt to reserve the next node when within buffer distance
-            bool reserved = true;
-            if (_currentDistance >= nextNodeDistance - _nodeReservationBuffer - _stoppingDistance)
-            {
-                reserved = manager.TryReserveNode(nextNode, this);
-            }
-
-            if (!reserved)
-            {
-                // Stop before entering the unreserved node
-                float capAtNode = Mathf.Max(0f, nextNodeDistance - _stoppingDistance);
-                maxDist = Mathf.Min(maxDist, capAtNode);
-            }
+            _isMoving = false;
         }
-
-        // 2. Proximity & Queue Constraint against other active agents
-        Vector3 currentPos = transform.position;
-        Vector3 moveDir = _polyline.EvaluateDistance(Mathf.Min(_currentDistance + 0.1f, _polyline.TotalLength)) - currentPos;
-        bool isMovingForward = moveDir.sqrMagnitude > 0.0001f;
-
-        if (isMovingForward)
-        {
-            moveDir.Normalize();
-
-            foreach (GridNavigationAgent other in manager.ActiveAgents)
-            {
-                if (other == null || other == this || !other.gameObject.activeInHierarchy) continue;
-
-                Vector3 toOther = other.transform.position - currentPos;
-                float distToOther = toOther.magnitude;
-
-                if (distToOther < _stoppingDistance * 1.5f && distToOther > 0.001f)
-                {
-                    // Check if the other agent is ahead of us along our path
-                    if (Vector3.Dot(moveDir, toOther / distToOther) > 0.3f)
-                    {
-                        float safeDistance = Mathf.Max(0f, _currentDistance + (distToOther - _stoppingDistance));
-                        maxDist = Mathf.Min(maxDist, safeDistance);
-                    }
-                }
-            }
-        }
-
-        return maxDist;
     }
 
     /// <summary>
-    /// Updates which node this agent currently occupies as it travels along the spline.
+    /// Determines whether this agent is allowed to continue toward
+    /// its next node.
+    ///
+    /// A node reservation is treated as the right-of-way system.
+    /// Once the agent has reserved a node, another agent cannot claim it.
+    /// </summary>
+    private bool CanAdvanceToNextNode(GridManager manager)
+    {
+        // There is no next node.
+        if (_currentNodeIndex + 1 >= _pathNodes.Count)
+            return true;
+
+        GridNavigationNode nextNode =
+            _pathNodes[_currentNodeIndex + 1];
+
+        float nextNodeDistance =
+            _polyline.GetPointDistance(
+                _currentNodeIndex + 1
+            );
+
+        // If we already own the next node, we have right of way.
+        if (_reservedNode == nextNode)
+            return true;
+
+        // Start attempting to reserve the node when we are close enough.
+        float reservationDistance =
+            Mathf.Max(
+                0f,
+                nextNodeDistance - _nodeReservationDistance
+            );
+
+        if (_currentDistance < reservationDistance)
+            return true;
+
+        // Try to claim the node.
+        bool reserved =
+            manager.TryReserveNode(nextNode, this);
+
+        if (!reserved)
+        {
+            // Another agent currently owns this node.
+            //
+            // Do not advance far enough to enter it.
+            _currentDistance = Mathf.Min(
+                _currentDistance,
+                nextNodeDistance - 0.01f
+            );
+
+            return false;
+        }
+
+        // We now own the node.
+        _reservedNode = nextNode;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Updates which node this agent currently occupies as it travels along the polyline.
     /// Releases previous nodes so queued agents behind can advance.
     /// </summary>
     private void UpdateNodeOccupation(GridManager manager)
     {
-        if (_currentNodeIndex + 1 >= _pathNodes.Count) return;
+        if (_currentNodeIndex + 1 >= _pathNodes.Count)
+            return;
 
-        float nextNodeDistance = _polyline.GetPointDistance(_currentNodeIndex + 1);
+        float nextNodeDistance =
+            _polyline.GetPointDistance(
+                _currentNodeIndex + 1
+            );
 
-        // When close enough to next node, transfer occupation and release previous node
-        if (_currentDistance >= nextNodeDistance - 0.1f)
+        // When the agent reaches the next node, transfer occupation.
+        if (_currentDistance >= nextNodeDistance - 0.01f)
         {
-            GridNavigationNode prevNode = _pathNodes[_currentNodeIndex];
-            _currentNodeIndex++;
-            GridNavigationNode currentNode = _pathNodes[_currentNodeIndex];
+            GridNavigationNode previousNode =
+                _pathNodes[_currentNodeIndex];
 
-            manager.OccupyNode(currentNode, this);
-            manager.ReleaseNode(prevNode, this);
+            _currentNodeIndex++;
+
+            GridNavigationNode currentNode =
+                _pathNodes[_currentNodeIndex];
+
+            manager.OccupyNode(
+                currentNode,
+                this
+            );
+
+            manager.ReleaseNode(
+                previousNode,
+                this
+            );
+
+            // We have now reached the node we reserved.
+            if (_reservedNode == currentNode)
+            {
+                _reservedNode = null;
+            }
         }
+    }
+
+    /// <summary>
+    /// Updates the agent's position and rotation along the polyline.
+    /// Rotation is always based on the direction of the path ahead,
+    /// preventing the agent from looking backwards when stopped.
+    /// </summary>
+    private void UpdateTransform()
+    {
+        Vector3 targetPosition =
+            _polyline.EvaluateDistance(_currentDistance);
+
+        transform.position = targetPosition;
+
+        UpdateRotation();
+    }
+
+    /// <summary>
+    /// Calculates the forward direction from the polyline and rotates
+    /// the agent toward the direction it will travel next.
+    /// </summary>
+    private void UpdateRotation()
+    {
+        if (_polyline == null || _polyline.TotalLength <= 0f)
+            return;
+
+        const float lookAheadDistance = 0.1f;
+
+        float lookDistance =
+            Mathf.Min(
+                _currentDistance + lookAheadDistance,
+                _polyline.TotalLength
+            );
+
+        Vector3 currentPosition =
+            _polyline.EvaluateDistance(_currentDistance);
+
+        Vector3 lookPosition =
+            _polyline.EvaluateDistance(lookDistance);
+
+        Vector3 direction =
+            lookPosition - currentPosition;
+
+        // If there is no path ahead, look backwards along the path
+        // to determine the final forward direction.
+        if (direction.sqrMagnitude <= 0.000001f)
+        {
+            float previousDistance =
+                Mathf.Max(
+                    0f,
+                    _currentDistance - lookAheadDistance
+                );
+
+            Vector3 previousPosition =
+                _polyline.EvaluateDistance(previousDistance);
+
+            direction =
+                currentPosition - previousPosition;
+        }
+
+        if (direction.sqrMagnitude <= 0.000001f)
+            return;
+
+        direction.Normalize();
+
+        transform.rotation =
+            Quaternion.LookRotation(
+                direction,
+                Vector3.up
+            );
     }
 
     public void Stop()
@@ -263,6 +376,3 @@ public class GridNavigationAgent : MonoBehaviour
         ReleaseReservations();
     }
 }
-
-
-
