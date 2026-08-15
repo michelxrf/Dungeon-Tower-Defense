@@ -4924,8 +4924,8 @@ MonoBehaviour:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.5, b: 0, a: 1}
-  _nodeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _maxPathCount: 100
+  _nodeColor: {r: 1, g: 1, b: 1, a: 1}
+  _maxPathCount: 5
 --- !u!156049354 &1090982840
 Grid:
   m_ObjectHideFlags: 0

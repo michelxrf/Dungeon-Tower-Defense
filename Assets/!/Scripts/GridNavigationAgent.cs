@@ -12,9 +12,6 @@ public class GridNavigationAgent : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 3.0f;
     [SerializeField] private bool _autoStart = true;
-    [SerializeField] private bool _loop = false;
-    [SerializeField] private bool _orientToDirection = true;
-    [SerializeField] private float _rotationSpeed = 10.0f;
 
     [Header("Vision & Obstacles")]
     [SerializeField] private MobVision _mobVision;
@@ -28,7 +25,7 @@ public class GridNavigationAgent : MonoBehaviour
     [SerializeField] private bool _useRandomPath = false;
 
     private List<GridNavigationNode> _pathNodes;
-    private CatmullRomSpline _spline;
+    private Polyline _polyline;
     private float _currentDistance = 0f;
     private int _currentNodeIndex = 0;
     private bool _isMoving = false;
@@ -110,9 +107,9 @@ public class GridNavigationAgent : MonoBehaviour
         }
 
         Vector3[] controlPoints = _pathNodes.Select(n => n.Position).ToArray();
-        _spline = new CatmullRomSpline(controlPoints);
+        _polyline = new Polyline(controlPoints);
 
-        if (_spline == null || _spline.TotalLength <= 0f)
+        if (_polyline == null || _polyline.TotalLength <= 0f)
         {
             Debug.LogWarning("[GridNavigationAgent] No valid path spline built.");
             _isMoving = false;
@@ -125,7 +122,7 @@ public class GridNavigationAgent : MonoBehaviour
         _currentNodeIndex = 0;
         _isMoving = true;
 
-        transform.position = _spline.EvaluateDistance(0f);
+        transform.position = _polyline.EvaluateDistance(0f);
 
         // Try to reserve start node
         manager.TryReserveNode(_pathNodes[0], this);
@@ -134,7 +131,7 @@ public class GridNavigationAgent : MonoBehaviour
 
     private void Update()
     {
-        if (!_isMoving || _spline == null || _spline.TotalLength <= 0f || _pathNodes == null || _pathNodes.Count == 0) return;
+        if (!_isMoving || _polyline == null || _polyline.TotalLength <= 0f || _pathNodes == null || _pathNodes.Count == 0) return;
 
         GridManager manager = GridManager.Instance;
         if (manager == null) return;
@@ -152,40 +149,19 @@ public class GridNavigationAgent : MonoBehaviour
         UpdateNodeOccupation(manager);
 
         // Position & Rotation update
-        Vector3 targetPosition = _spline.EvaluateDistance(_currentDistance);
-
-        if (_orientToDirection)
+        Vector3 targetPosition = _polyline.EvaluateDistance(_currentDistance);
+        
+        if(transform.position != targetPosition)
         {
-            Vector3 lookPosition = _spline.EvaluateDistance(Mathf.Min(_currentDistance + 0.1f, _spline.TotalLength));
-            Vector3 moveDirection = (lookPosition - targetPosition);
-            if (moveDirection.sqrMagnitude > 0.0001f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-            }
+            transform.rotation = Quaternion.LookRotation(targetPosition - transform.position, Vector3.up);
+            transform.position = targetPosition;
         }
 
-        transform.position = targetPosition;
-
         // End of path handling
-        if (_currentDistance >= _spline.TotalLength - 0.01f && _currentNodeIndex >= _pathNodes.Count - 1)
+        if (_currentDistance >= _polyline.TotalLength - 0.01f && _currentNodeIndex >= _pathNodes.Count - 1)
         {
-            if (_loop)
-            {
-                // Check if start node is clear before looping
-                if (manager.TryReserveNode(_pathNodes[0], this))
-                {
-                    manager.ReleaseNode(_pathNodes[_currentNodeIndex], this);
-                    _currentNodeIndex = 0;
-                    _currentDistance = 0f;
-                    manager.OccupyNode(_pathNodes[0], this);
-                }
-            }
-            else
-            {
-                manager.ReleaseNode(_pathNodes[_currentNodeIndex], this);
-                _isMoving = false;
-            }
+            manager.ReleaseNode(_pathNodes[_currentNodeIndex], this);
+            _isMoving = false;
         }
     }
 
@@ -200,18 +176,18 @@ public class GridNavigationAgent : MonoBehaviour
             _mobVision = GetComponentInChildren<MobVision>();
         }
 
-        if (_mobVision != null && _mobVision.HasObstacleInVision)
+        if (_mobVision != null && !_mobVision.IsPathClear())
         {
             return _currentDistance;
         }
 
-        float maxDist = _spline.TotalLength;
+        float maxDist = _polyline.TotalLength;
 
         // 1. Node Reservation Constraint
         if (_currentNodeIndex + 1 < _pathNodes.Count)
         {
             GridNavigationNode nextNode = _pathNodes[_currentNodeIndex + 1];
-            float nextNodeDistance = _spline.GetControlPointDistance(_currentNodeIndex + 1);
+            float nextNodeDistance = _polyline.GetPointDistance(_currentNodeIndex + 1);
 
             // Attempt to reserve the next node when within buffer distance
             bool reserved = true;
@@ -230,7 +206,7 @@ public class GridNavigationAgent : MonoBehaviour
 
         // 2. Proximity & Queue Constraint against other active agents
         Vector3 currentPos = transform.position;
-        Vector3 moveDir = _spline.EvaluateDistance(Mathf.Min(_currentDistance + 0.1f, _spline.TotalLength)) - currentPos;
+        Vector3 moveDir = _polyline.EvaluateDistance(Mathf.Min(_currentDistance + 0.1f, _polyline.TotalLength)) - currentPos;
         bool isMovingForward = moveDir.sqrMagnitude > 0.0001f;
 
         if (isMovingForward)
@@ -267,7 +243,7 @@ public class GridNavigationAgent : MonoBehaviour
     {
         if (_currentNodeIndex + 1 >= _pathNodes.Count) return;
 
-        float nextNodeDistance = _spline.GetControlPointDistance(_currentNodeIndex + 1);
+        float nextNodeDistance = _polyline.GetPointDistance(_currentNodeIndex + 1);
 
         // When close enough to next node, transfer occupation and release previous node
         if (_currentDistance >= nextNodeDistance - 0.1f)

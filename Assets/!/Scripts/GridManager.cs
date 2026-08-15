@@ -29,29 +29,29 @@ public class GridManager : MonoBehaviour
     private Dictionary<Vector2Int, List<GridNavigationNode>> _positionToNodes = new Dictionary<Vector2Int, List<GridNavigationNode>>();
     private Grid _grid;
 
-    private List<CatmullRomSpline> _pathSplines = new List<CatmullRomSpline>();
+    private List<Polyline> _pathPolylines = new List<Polyline>();
     private List<List<GridNavigationNode>> _allCalculatedPaths = new List<List<GridNavigationNode>>();
     private List<GridNavigationAgent> _activeAgents = new List<GridNavigationAgent>();
     private bool _pathCalculated = false;
 
-    public IReadOnlyList<CatmullRomSpline> PathSplines
+    public IReadOnlyList<Polyline> PathPolylines
     {
         get
         {
-            if (!_pathCalculated || _pathSplines == null || _pathSplines.Count == 0)
+            if (!_pathCalculated || _pathPolylines == null || _pathPolylines.Count == 0)
             {
                 CalculateAndStoreAllPaths();
             }
-            return _pathSplines;
+            return _pathPolylines;
         }
     }
 
-    public CatmullRomSpline PathSpline
+    public Polyline Path
     {
         get
         {
-            var splines = PathSplines;
-            return splines != null && splines.Count > 0 ? splines[0] : null;
+            var polylines = PathPolylines;
+            return polylines != null && polylines.Count > 0 ? polylines[0] : null;
         }
     }
 
@@ -129,11 +129,11 @@ public class GridManager : MonoBehaviour
     /// <summary>
     /// Calculates all non-self-overlapping paths from Start to End nodes and stores them as Catmull-Rom splines.
     /// </summary>
-    public List<CatmullRomSpline> CalculateAndStoreAllPaths()
+    public List<Polyline> CalculateAndStoreAllPaths()
     {
         InitializeGridDictionary();
 
-        _pathSplines.Clear();
+        _pathPolylines.Clear();
         _allCalculatedPaths.Clear();
 
         GridNavigationNode startNode = _gridNodes.Keys.FirstOrDefault(n => n != null && n.NodeType == NodeType.Start);
@@ -143,7 +143,7 @@ public class GridManager : MonoBehaviour
         {
             Debug.LogWarning("[GridManager] Start node or End node missing in scene.");
             _pathCalculated = true;
-            return _pathSplines;
+            return _pathPolylines;
         }
 
         _allCalculatedPaths = FindAllPaths(startNode, endNode, _maxPathCount);
@@ -153,47 +153,47 @@ public class GridManager : MonoBehaviour
             if (pathNodes != null && pathNodes.Count > 0)
             {
                 Vector3[] controlPoints = pathNodes.Select(n => n.Position).ToArray();
-                _pathSplines.Add(new CatmullRomSpline(controlPoints));
+                _pathPolylines.Add(new Polyline(controlPoints));
             }
         }
 
-        if (_pathSplines.Count == 0)
+        if (_pathPolylines.Count == 0)
         {
             Debug.LogWarning("[GridManager] No valid path found from Start to End.");
         }
 
         _pathCalculated = true;
-        return _pathSplines;
+        return _pathPolylines;
     }
 
     /// <summary>
     /// Compatibility method for single path calculation call.
     /// </summary>
-    public CatmullRomSpline CalculateAndStorePath()
+    public Polyline CalculateAndStorePath()
     {
-        var splines = CalculateAndStoreAllPaths();
-        return splines != null && splines.Count > 0 ? splines[0] : null;
+        var polylines = CalculateAndStoreAllPaths();
+        return polylines != null && polylines.Count > 0 ? polylines[0] : null;
     }
 
     /// <summary>
     /// Safely gets a specific path spline by index.
     /// </summary>
-    public CatmullRomSpline GetPathSpline(int index)
+    public Polyline GetPathPolyline(int index)
     {
-        var splines = PathSplines;
-        if (splines == null || splines.Count == 0) return null;
-        index = Mathf.Clamp(index, 0, splines.Count - 1);
-        return splines[index];
+        var polylines = PathPolylines;
+        if (polylines == null || polylines.Count == 0) return null;
+        index = Mathf.Clamp(index, 0, polylines.Count - 1);
+        return polylines[index];
     }
 
     /// <summary>
     /// Gets a random path spline from the stored paths.
     /// </summary>
-    public CatmullRomSpline GetRandomPathSpline()
+    public Polyline GetRandomPathPolyline()
     {
-        var splines = PathSplines;
-        if (splines == null || splines.Count == 0) return null;
-        return splines[UnityEngine.Random.Range(0, splines.Count)];
+        var polylines = PathPolylines;
+        if (polylines == null || polylines.Count == 0) return null;
+        return polylines[UnityEngine.Random.Range(0, polylines.Count)];
     }
 
     /// <summary>
@@ -398,33 +398,33 @@ public class GridManager : MonoBehaviour
     {
         if (!_drawGizmos) return;
 
-        if (!Application.isPlaying && (!_pathCalculated || _pathSplines == null || _pathSplines.Count == 0))
+        if (!Application.isPlaying && (!_pathCalculated || _pathPolylines == null || _pathPolylines.Count == 0))
         {
             CalculateAndStoreAllPaths();
         }
 
-        if (_pathSplines == null || _pathSplines.Count == 0) return;
+        if (_pathPolylines == null || _pathPolylines.Count == 0) return;
 
-        for (int p = 0; p < _pathSplines.Count; p++)
+        for (int p = 0; p < _pathPolylines.Count; p++)
         {
-            CatmullRomSpline spline = _pathSplines[p];
-            if (spline == null || spline.SampledPoints == null || spline.SampledPoints.Count == 0) continue;
+            Polyline polyline = _pathPolylines[p];
+            if (polyline == null || polyline.Points == null || polyline.Points.Length == 0) continue;
 
             Color pathColor = (_pathColors != null && _pathColors.Length > 0)
                 ? _pathColors[p % _pathColors.Length]
-                : Color.HSVToRGB((float)p / _pathSplines.Count, 1f, 1f);
+                : Color.HSVToRGB((float)p / _pathPolylines.Count, 1f, 1f);
 
             Gizmos.color = pathColor;
-            IReadOnlyList<Vector3> points = spline.SampledPoints;
+            IReadOnlyList<Vector3> points = polyline.Points;
             for (int i = 0; i < points.Count - 1; i++)
             {
                 Gizmos.DrawLine(points[i], points[i + 1]);
             }
 
             Gizmos.color = _nodeColor;
-            if (spline.ControlPoints != null)
+            if (polyline.Points != null)
             {
-                foreach (Vector3 cp in spline.ControlPoints)
+                foreach (Vector3 cp in polyline.Points)
                 {
                     Gizmos.DrawWireSphere(cp, 0.15f);
                 }
