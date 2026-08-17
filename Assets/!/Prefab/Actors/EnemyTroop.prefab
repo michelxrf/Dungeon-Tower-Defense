@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   _maxHealth: 2
-  _floatingDamagePrefab: {fileID: 2386286326820679328, guid: 40669c082d068e24dbfa2290dcd51920, type: 3}
+  _floatingDamagePrefab: {fileID: 7141869205709529228, guid: f0d1c7e91f86b5245ba531f0ad2e02e0, type: 3}
 --- !u!1 &6026955200542152925
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 338f006156c76ea4cb7dd65986d54486, type: 3}
   m_Name: TestArcher
   m_EditorClassIdentifier: Assembly-CSharp::TroopSO
-  displayName: Testy Boy
+  displayName: Test Archer
   description: 
   prefab: {fileID: 8199649659365696702, guid: 643d143af92275940be07f402bbcd199, type: 3}
   cardArt: {fileID: 0}

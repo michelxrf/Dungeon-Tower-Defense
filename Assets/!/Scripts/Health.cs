@@ -8,6 +8,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _maxHealth -= damage;
+        SpawnDamageIndicator(damage);
 
         if (_maxHealth <= 0)
         {
@@ -17,7 +18,9 @@ public class Health : MonoBehaviour
 
     private void SpawnDamageIndicator(int damage)
     {
-        GameObject damageIndicator = Instantiate(_floatingDamagePrefab, transform.position + Vector3.up, Quaternion.identity);
+        GameObject damageIndicator = Instantiate(_floatingDamagePrefab);
+        Debug.Log("Damage indicator spawned.");
+        damageIndicator.GetComponent<RectTransform>().position = transform.position;
         damageIndicator.GetComponent<FloatingDamage>().Init(damage);
 
     }

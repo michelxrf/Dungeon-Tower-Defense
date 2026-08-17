@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -22,14 +23,23 @@ public class FloatingDamage : MonoBehaviour
 
     private void Update()
     {
+        StartCoroutine(Fade());
+    }
+
+    IEnumerator Fade()
+    {
         // Move the damage text upwards
         transform.position += Vector3.up * _floatSpeed * Time.deltaTime;
         // Fade out the text over time
-        float elapsedTime = Time.timeSinceLevelLoad;
-        if (elapsedTime >= _lifetime)
+        float elapsedTime = 0f;
+        while (elapsedTime < _lifetime)
         {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+
             float fadeAmount = 1f - ((elapsedTime - _lifetime) / _fadeDuration);
             _canvasGroup.alpha = fadeAmount;
+
             if (fadeAmount <= 0f)
             {
                 Destroy(gameObject);
