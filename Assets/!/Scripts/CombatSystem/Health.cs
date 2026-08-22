@@ -1,16 +1,32 @@
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int _maxHealth = 10;
     [SerializeField] private GameObject _floatingDamagePrefab;
+    [SerializeField] private int _maxHealth = 10;
+    
+    private int _currentHealth = 10;
+
+    public Action<float, float> OnHealthChanged;
+
+    private void Awake()
+    {
+        _currentHealth = _maxHealth;
+    }
+
+    private void Start()
+    {
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
+    }
 
     public void TakeDamage(int damage)
     {
-        _maxHealth -= damage;
+        _currentHealth -= damage;
         SpawnDamageIndicator(damage);
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
 
-        if (_maxHealth <= 0)
+        if (_currentHealth <= 0)
         {
             Die();
         }
