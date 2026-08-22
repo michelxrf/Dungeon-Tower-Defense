@@ -19,7 +19,6 @@ public class Health : MonoBehaviour
     private void SpawnDamageIndicator(int damage)
     {
         GameObject damageIndicator = Instantiate(_floatingDamagePrefab);
-        Debug.Log("Damage indicator spawned.");
         damageIndicator.GetComponent<RectTransform>().position = transform.position;
         damageIndicator.GetComponent<FloatingDamage>().Init(damage);
 

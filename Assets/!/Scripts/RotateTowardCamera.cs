@@ -13,7 +13,7 @@ public class RotateTowardCamera : MonoBehaviour
     {
         if (mainCamera != null)
         {
-            transform.LookAt(mainCamera.transform);
+            transform.LookAt(mainCamera.transform, Vector3.up);
         }
     }
 }
