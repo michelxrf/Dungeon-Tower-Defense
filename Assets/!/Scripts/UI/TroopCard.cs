@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,11 +9,16 @@ using UnityEngine.UI;
 public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     [SerializeField] private TroopSO _troopSO;
+
+    [Header("References")]
     [SerializeField] private Image _cardArt;
     [SerializeField] private TMP_Text _cardName;
     [SerializeField] private GameObject _dragIcon;
+    [SerializeField] private GameObject _lock;
+    [SerializeField] private TMP_Text _cost;
     
     private TroopData _data;
+    private bool _isLocked;
 
     private void Awake()
     {
@@ -23,8 +29,41 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         _dragIcon.SetActive(false);
     }
 
+    void Start()
+    {
+        if (_data != null)
+        {
+            // Do something with the troop data
+            if (_data.cardArt != null)
+            {
+                _cardArt.sprite = _data.cardArt;
+            }
+            _cardName.text = _data.displayName;
+        }
+
+        if(LevelManager.Instance != null)
+        {
+            VerifyAffordability(LevelManager.Instance.GetCurrentMoney());
+            LevelManager.Instance.OnMoneyChanged += VerifyAffordability;
+        }
+    }
+
+    private void LockCard(bool isLocked)
+    {
+        _lock.SetActive(isLocked);
+        _isLocked = isLocked;
+    }
+
+    private void VerifyAffordability(int currentMoney)
+    {
+        LockCard(_troopSO.cost > currentMoney);
+    }
+
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (_isLocked) return;
+
         _dragIcon.SetActive(true);
         TroopSlot[] slots = FindObjectsByType<TroopSlot>();
 
@@ -36,11 +75,15 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (_isLocked) return;
+
         _dragIcon.transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if(_isLocked) return;
+
         _dragIcon.SetActive(false);
 
         TroopSlot[] slots = FindObjectsByType<TroopSlot>();
@@ -61,20 +104,9 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
             if (slot != null)
             {
                 slot.SetTroopData(_data);
+                LevelManager.Instance.RemoveMoney(_troopSO.cost);
             }
         }
     }
-
-    void Start()
-    {
-        if (_data != null)
-        {
-            // Do something with the troop data
-            if(_data.cardArt != null)
-            {
-                _cardArt.sprite = _data.cardArt;
-            }
-            _cardName.text = _data.displayName;
-        }
-    }
+    
 }

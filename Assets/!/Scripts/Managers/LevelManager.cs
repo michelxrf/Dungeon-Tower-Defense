@@ -1,16 +1,49 @@
+using System;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static LevelManager Instance { get; private set; }
+
+    [Header("Level Settings")]
+    [SerializeField] private int _startingMoney;
+
+    private int _money;
+
+    public Action<int> OnMoneyChanged;
+
+    private void Awake()
     {
-        
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        _money = _startingMoney;
+        OnMoneyChanged?.Invoke(_money);
+    }
+
+    public int GetCurrentMoney()
+    {
+        return _money;
+    }
+
+    public void AddMoney(int amount)
+    {
+        _money += amount;
+        OnMoneyChanged?.Invoke(_money);
+    }
+
+    public void RemoveMoney(int amount)
+    {
+        _money -= amount;
+        OnMoneyChanged?.Invoke(_money);
     }
 }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4764692973849340388}
   - component: {fileID: 5089948319821858406}
   - component: {fileID: 4325057558270258017}
+  - component: {fileID: 7735289307363624010}
   m_Layer: 11
   m_Name: EnemyTroop
   m_TagString: Untagged
@@ -134,6 +135,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   _floatingDamagePrefab: {fileID: 4848067062653241609, guid: f0d1c7e91f86b5245ba531f0ad2e02e0, type: 3}
   _maxHealth: 2
+--- !u!114 &7735289307363624010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204698400126474594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4d25b679103c5a4ca3cb8f84be1bf8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Reward
+  _money: 1
 --- !u!1 &1487296675051104934
 GameObject:
   m_ObjectHideFlags: 0

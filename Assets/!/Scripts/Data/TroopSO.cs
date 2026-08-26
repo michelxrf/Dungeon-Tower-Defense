@@ -13,4 +13,5 @@ public class TroopSO : ScriptableObject
     public float health;
     public float damage;
     public float attackFrequency;
+    public int cost;
 }
