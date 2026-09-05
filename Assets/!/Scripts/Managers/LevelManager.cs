@@ -7,10 +7,15 @@ public class LevelManager : MonoBehaviour
 
     [Header("Level Settings")]
     [SerializeField] private int _startingMoney;
+    [SerializeField] private LevelSO _levelData;
 
+    private int _currentWaveIndex = 0;
     private int _money;
 
     public Action<int> OnMoneyChanged;
+    public Action OnWaveEnded;
+    public Action OnLevelCompleted;
+    public Action OnLevelFailed;
 
     private void Awake()
     {
@@ -21,12 +26,22 @@ public class LevelManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        _money = _startingMoney;
+        PlayerSave playerData = SaveSystem.LoadGame();
+
+        if (playerData != null)
+        {
+            _money = playerData.money;
+            _currentWaveIndex = playerData.currentWave;
+        }
+        else
+        { 
+            _money = _startingMoney;
+        }
+
         OnMoneyChanged?.Invoke(_money);
     }
 
@@ -45,5 +60,44 @@ public class LevelManager : MonoBehaviour
     {
         _money -= amount;
         OnMoneyChanged?.Invoke(_money);
+    }
+
+
+    public GameObject GetMob(int index)
+    {
+        if (index < 0 || index >= _levelData.waves[_currentWaveIndex].mobs.Length)
+        {
+            Debug.LogWarning($"Index {index} is out of bounds for the current wave's mobs.");
+            return null;
+        }
+        return _levelData.waves[_currentWaveIndex].mobs[index];
+    }
+
+    public int GetTotalWaves()
+    {
+        return _levelData.waves.Length;
+    }
+
+    public int GetCurrentWaveIndex()
+    {
+        return _currentWaveIndex;
+    }
+
+    public void WaveFinished()
+    {
+        if (_currentWaveIndex + 1 >= _levelData.waves.Length)
+        {
+            Debug.Log("Level completed!");
+            GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
+            FindAnyObjectByType<PauseScreen>().Show();
+            OnLevelCompleted?.Invoke();
+        }
+        else
+        {
+            Debug.Log($"Wave {_currentWaveIndex} completed. Preparing next wave.");
+            _currentWaveIndex++;
+            GameManager.Instance.WaveEnded(_levelData, _currentWaveIndex, _money);
+            OnWaveEnded?.Invoke();
+        }
     }
 }

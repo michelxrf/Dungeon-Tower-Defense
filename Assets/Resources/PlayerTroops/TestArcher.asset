@@ -20,3 +20,4 @@ MonoBehaviour:
   health: 10
   damage: 1
   attackFrequency: 1
+  cost: 3

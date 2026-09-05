@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     private int _currentHealth = 10;
 
     public Action<float, float> OnHealthChanged;
+    public Action OnDeath;
 
     private void Awake()
     {
@@ -42,7 +43,7 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log($"{gameObject.name} has died.");
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 }

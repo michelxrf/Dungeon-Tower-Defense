@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Troop Data", menuName = "Data")]
+[CreateAssetMenu(fileName = "TroopData", menuName = "New Troop Data")]
 public class TroopSO : ScriptableObject
 {
     public string displayName;
