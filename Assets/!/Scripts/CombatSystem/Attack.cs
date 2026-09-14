@@ -42,6 +42,8 @@ public class Attack : MonoBehaviour
 
     private void PerformAttack()
     {
+        if(LevelManager.Instance.IsPaused) return;
+
         if (_targetsInRange.Count > 0)
         {
             Health target = _targetsInRange[0];

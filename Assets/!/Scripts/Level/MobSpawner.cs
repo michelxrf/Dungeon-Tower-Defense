@@ -15,6 +15,8 @@ public class MobSpawner : MonoBehaviour
 
     private void Update()
     {
+        if(LevelManager.Instance.IsPaused) return;
+
         SpawnMobs();
     }
 

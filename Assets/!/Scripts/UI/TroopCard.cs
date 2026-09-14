@@ -25,27 +25,20 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         _data = new TroopData(_troopSO);
         _cardArt.sprite = _data.cardArt;
         _cardName.text = _data.displayName;
-
-        _dragIcon.SetActive(false);
     }
 
     void Start()
     {
-        if (_data != null)
-        {
-            // Do something with the troop data
-            if (_data.cardArt != null)
-            {
-                _cardArt.sprite = _data.cardArt;
-            }
-            _cardName.text = _data.displayName;
-        }
-
         if(LevelManager.Instance != null)
         {
             VerifyAffordability(LevelManager.Instance.GetCurrentMoney());
             LevelManager.Instance.OnMoneyChanged += VerifyAffordability;
         }
+
+        if(_troopSO != null)
+            SetupCard(new TroopData(_troopSO));
+
+        _dragIcon.SetActive(false);
     }
 
     private void LockCard(bool isLocked)
@@ -59,6 +52,26 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         LockCard(_troopSO.cost > currentMoney);
     }
 
+    public void SetupCard(TroopData _data)
+    {
+        if (_data != null)
+        {
+            // Do something with the troop data
+            if (_data.cardArt != null)
+            {
+                _cardArt.sprite = _data.cardArt;
+            }
+            _cardName.text = _data.displayName;
+            _cost.text = _troopSO.cost.ToString();
+        }
+    }
+    private void OnDestroy()
+    {
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnMoneyChanged -= VerifyAffordability;
+        }
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {

@@ -5,6 +5,6 @@ public class KillPlayer : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        FindAnyObjectByType<PauseScreen>().Show();
+        LevelManager.Instance.GameOver();
     }
 }

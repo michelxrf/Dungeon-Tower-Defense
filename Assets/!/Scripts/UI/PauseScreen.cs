@@ -28,6 +28,6 @@ public class PauseScreen : MonoBehaviour
     public void RestartClicked()
     {
         SaveSystem.DeleteSave();
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("GameLevel");
     }
 }

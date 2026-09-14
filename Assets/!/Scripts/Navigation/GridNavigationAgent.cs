@@ -145,6 +145,8 @@ public class GridNavigationAgent : MonoBehaviour
 
     private void Update()
     {
+        if(LevelManager.Instance.IsPaused) return;
+
         if (!_isMoving ||
             _polyline == null ||
             _polyline.TotalLength <= 0f ||

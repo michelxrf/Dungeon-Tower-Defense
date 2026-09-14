@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         playerData = SaveSystem.LoadGame();
+        if(playerData == null)
+        {
+            playerData = new PlayerSave();
+        }
     }
 
     /// <summary>

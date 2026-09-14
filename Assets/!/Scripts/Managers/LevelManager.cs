@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -11,11 +13,18 @@ public class LevelManager : MonoBehaviour
 
     private int _currentWaveIndex = 0;
     private int _money;
+    private bool _isPaused = true;
+    private List<TroopData> _playerTroopsHand = new List<TroopData>();
+
+    public bool IsPaused => _isPaused;
 
     public Action<int> OnMoneyChanged;
     public Action OnWaveEnded;
     public Action OnLevelCompleted;
     public Action OnLevelFailed;
+    public Action OnHandChanged;
+    public Action OnPause;
+    public Action OnResume;
 
     private void Awake()
     {
@@ -36,6 +45,7 @@ public class LevelManager : MonoBehaviour
         {
             _money = playerData.money;
             _currentWaveIndex = playerData.currentWave;
+            _playerTroopsHand = playerData.playerTroopsHand.ToList<TroopData>();
         }
         else
         { 
@@ -43,6 +53,24 @@ public class LevelManager : MonoBehaviour
         }
 
         OnMoneyChanged?.Invoke(_money);
+    }
+
+    public void AddNewTroop(TroopData troop)
+    {
+        if(_playerTroopsHand.Contains(troop))
+        {
+            Debug.Log("Troop already exists in the player's hand. Should level up, not implemented");
+        }
+        else
+        {
+            _playerTroopsHand.Add(troop);
+        }
+        OnHandChanged?.Invoke();
+    }
+
+    public List<TroopData> GetPlayerTroopsHand()
+    {
+        return _playerTroopsHand;
     }
 
     public int GetCurrentMoney()
@@ -99,5 +127,28 @@ public class LevelManager : MonoBehaviour
             GameManager.Instance.WaveEnded(_levelData, _currentWaveIndex, _money);
             OnWaveEnded?.Invoke();
         }
+
+        PauseGame();
+    }
+
+    public void PauseGame()
+    {
+        _isPaused = true;
+        OnPause?.Invoke();
+    }
+
+    public void Unpause()
+    {
+        _isPaused = false;
+        OnResume?.Invoke();
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over!");
+        GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
+        FindAnyObjectByType<PauseScreen>().Show();
+        PauseGame();
+        OnLevelFailed?.Invoke();
     }
 }
