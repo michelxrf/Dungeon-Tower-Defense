@@ -12,6 +12,9 @@ public static class SaveSystem
 
     public static PlayerSave LoadGame()
     {
+        Debug.LogWarning("Save system disabled for testing purposes. Returning null.");
+        return null;
+
         if (System.IO.File.Exists(saveFilePath))
         {
             string json = System.IO.File.ReadAllText(saveFilePath);

@@ -151,4 +151,9 @@ public class LevelManager : MonoBehaviour
         PauseGame();
         OnLevelFailed?.Invoke();
     }
+
+    public float GetLevelSpeedMultiplier()
+    {
+        return 1 + (_levelData.speedMultiplierPerWave * _currentWaveIndex);
+    }
 }

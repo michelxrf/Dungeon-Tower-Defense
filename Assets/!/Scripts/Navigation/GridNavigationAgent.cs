@@ -29,6 +29,7 @@ public class GridNavigationAgent : MonoBehaviour
     private float _currentDistance = 0f;
     private int _currentNodeIndex = 0;
     private bool _isMoving = false;
+    private float _moveSpeedMultiplier = 1.0f;
 
     // The next node this agent has successfully reserved.
     private GridNavigationNode _reservedNode;
@@ -59,6 +60,8 @@ public class GridNavigationAgent : MonoBehaviour
         {
             StartFollowingPath();
         }
+
+        _moveSpeedMultiplier = LevelManager.Instance.GetLevelSpeedMultiplier();
     }
 
     private void OnDisable()
@@ -178,7 +181,7 @@ public class GridNavigationAgent : MonoBehaviour
 
         // Move forward.
         _currentDistance = Mathf.Min(
-            _currentDistance + _moveSpeed * Time.deltaTime,
+            _currentDistance + _moveSpeed * Time.deltaTime * _moveSpeedMultiplier,
             _polyline.TotalLength
         );
 
@@ -257,6 +260,11 @@ public class GridNavigationAgent : MonoBehaviour
         _reservedNode = nextNode;
 
         return true;
+    }
+
+    public void SetMoveSpeedMuliplier(float multiplier)
+    {
+        _moveSpeedMultiplier *= multiplier;
     }
 
     /// <summary>

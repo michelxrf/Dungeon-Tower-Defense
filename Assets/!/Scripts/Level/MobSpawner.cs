@@ -49,7 +49,7 @@ public class MobSpawner : MonoBehaviour
         _spawnCount++;
         _livingMobs++;
         mobInstance.GetComponent<Health>().OnDeath += () => _livingMobs--;
-        StartCoroutine(WaitCooldown(PerformanceSettings.MobSpawnInterval));
+        StartCoroutine(WaitCooldown(PerformanceSettings.MobSpawnInterval / LevelManager.Instance.GetLevelSpeedMultiplier()));
     }
 
     IEnumerator WaitCooldown(float waitTime)
