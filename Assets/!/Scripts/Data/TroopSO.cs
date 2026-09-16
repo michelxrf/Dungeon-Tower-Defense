@@ -10,9 +10,9 @@ public class TroopSO : ScriptableObject
     public GameObject prefab;
     public Sprite cardArt;
 
-    public float speed;
     public float health;
-    public float damage;
-    public float attackFrequency;
+    public float visualRange;
+    public int damage;
+    public float attackInterval;
     public int cost;
 }

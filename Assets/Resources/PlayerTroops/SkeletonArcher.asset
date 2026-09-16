@@ -15,10 +15,10 @@ MonoBehaviour:
   displayName: Skeleton Archer
   description: 
   troopSlotType: 1
-  prefab: {fileID: 8199649659365696702, guid: 643d143af92275940be07f402bbcd199, type: 3}
+  prefab: {fileID: 433596546146712997, guid: 0a9fb6c44cbbed14b840a79d15d9177f, type: 3}
   cardArt: {fileID: -1502278121, guid: 6e982cec86ae5cb46a787faeb3773a6b, type: 3}
-  speed: 0
   health: 10
+  visualRange: 1.8
   damage: 1
-  attackFrequency: 1
+  attackInterval: 1
   cost: 3

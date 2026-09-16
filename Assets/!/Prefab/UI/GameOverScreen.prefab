@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 7351325946099777845}
   - component: {fileID: 3336790599015548312}
   m_Layer: 5
-  m_Name: PauseScreen
+  m_Name: GameOverScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -539,8 +539,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Game Over
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
+  m_sharedMaterial: {fileID: -4151694044165900202, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

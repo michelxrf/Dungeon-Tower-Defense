@@ -9914,53 +9914,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2722452301790211335, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2722452301790211335, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2722452301790211335, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2722452301790211335, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3962361673074753407, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
-    - target: {fileID: 3962361673074753407, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -4151694044165900202, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
-    - target: {fileID: 3962361673074753407, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5703991834720841677, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
       propertyPath: m_Name
-      value: PauseScreen
-      objectReference: {fileID: 0}
-    - target: {fileID: 6966634098112690784, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6966634098112690784, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6966634098112690784, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6966634098112690784, guid: 7eaa0eea6e6de864c875ba9c4f61d982, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: GameOverScreen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

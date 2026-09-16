@@ -26,7 +26,6 @@ public class TroopSlot : MonoBehaviour
         _isOccupied = true;
 
         GameObject instantiatedTroop = Instantiate(_troopData.prefab, transform.position, Quaternion.identity, transform);
-        instantiatedTroop.GetComponent<TroopSetup>().Setup(_troopData);
     }
 
     public void ClearTroopData()

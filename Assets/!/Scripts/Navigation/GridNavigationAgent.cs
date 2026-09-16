@@ -14,7 +14,7 @@ public class GridNavigationAgent : MonoBehaviour
     [SerializeField] private bool _autoStart = true;
 
     [Header("Vision & Obstacles")]
-    [SerializeField] private MobVision _mobVision;
+    [SerializeField] private ObstacleDetection _obstacleDetection;
 
     [Header("Node Reservation Settings")]
     [Tooltip("The distance from the node at which the agent will consider itself to have reached the node. NEED TO BE HALF THE SIZE OF A GRID CELL")]
@@ -167,14 +167,13 @@ public class GridNavigationAgent : MonoBehaviour
         // Determine whether the agent can enter the next node.
         if (!CanAdvanceToNextNode(manager))
             return;
-
-        // MobVision handles physical obstacles and other agents.
-        if (_mobVision == null)
+        // ObstacleDetection handles physical obstacles.
+        if (_obstacleDetection == null)
         {
-            _mobVision = GetComponentInChildren<MobVision>();
+            _obstacleDetection = GetComponentInChildren<ObstacleDetection>();
         }
 
-        if (_mobVision != null && !_mobVision.IsPathClear())
+        if (_obstacleDetection != null && !_obstacleDetection.IsPathClear())
         {
             return;
         }
