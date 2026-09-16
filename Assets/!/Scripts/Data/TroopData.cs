@@ -10,10 +10,10 @@ public class TroopData
     public GameObject prefab;
     public Sprite cardArt;
 
-    public float speed;
     public float health;
     public float damage;
-    public float attackFrequency;
+    public float visualRange;
+    public float attackInterval;
     public TroopSlotType troopSlotType;
 
     public TroopData(TroopSO troopSO)
@@ -22,10 +22,10 @@ public class TroopData
         description = troopSO.description;
         prefab = troopSO.prefab;
         cardArt = troopSO.cardArt;
-        speed = troopSO.speed;
         health = troopSO.health;
         damage = troopSO.damage;
-        attackFrequency = troopSO.attackFrequency;
+        visualRange = troopSO.visualRange;
+        attackInterval = troopSO.attackInterval;
         troopSlotType = troopSO.troopSlotType;
     }
 }
