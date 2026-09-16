@@ -14,6 +14,7 @@ public class TroopData
     public float health;
     public float damage;
     public float attackFrequency;
+    public TroopSlotType troopSlotType;
 
     public TroopData(TroopSO troopSO)
     {
@@ -25,5 +26,6 @@ public class TroopData
         health = troopSO.health;
         damage = troopSO.damage;
         attackFrequency = troopSO.attackFrequency;
+        troopSlotType = troopSO.troopSlotType;
     }
 }

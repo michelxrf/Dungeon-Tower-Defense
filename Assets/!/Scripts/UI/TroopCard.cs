@@ -82,7 +82,8 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
         foreach (TroopSlot slot in slots)
         {
-            slot.ShowFreeSlot();
+            if(slot.GetTroopSlotType() == _data.troopSlotType)
+                slot.ShowFreeSlot();
         }
     }
 
@@ -111,13 +112,15 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
         if (hit.collider != null)
         {
-            Debug.Log($"Hit: {hit.collider.name}");
-
             TroopSlot slot = hit.collider.GetComponent<TroopSlot>();
             if (slot != null)
             {
-                slot.SetTroopData(_data);
-                LevelManager.Instance.RemoveMoney(_troopSO.cost);
+                if(!slot.IsOccupied && slot.GetTroopSlotType() == _data.troopSlotType)
+                {
+                    slot.SetTroopData(_data);
+                    LevelManager.Instance.RemoveMoney(_troopSO.cost);
+                }
+
             }
         }
     }

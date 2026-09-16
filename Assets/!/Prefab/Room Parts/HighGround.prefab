@@ -103,6 +103,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8654719255979519807}
     m_Modifications:
+    - target: {fileID: 1411889515529226450, guid: c944bd556d49f6f43b22713ec97164ea, type: 3}
+      propertyPath: _troopSlotType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2489372168693888973, guid: c944bd556d49f6f43b22713ec97164ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

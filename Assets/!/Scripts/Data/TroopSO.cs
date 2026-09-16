@@ -1,10 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TroopData", menuName = "New Troop Data")]
+[CreateAssetMenu(fileName = "Player Troop", menuName = "New Player Defense")]
 public class TroopSO : ScriptableObject
 {
     public string displayName;
     public string description;
+    public TroopSlotType troopSlotType;
 
     public GameObject prefab;
     public Sprite cardArt;
