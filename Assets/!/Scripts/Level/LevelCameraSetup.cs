@@ -47,8 +47,8 @@ public class LevelCameraSetup : MonoBehaviour
         _targetCamera.transform.position = cameraPosition;
 
         // Calcula o tamanho necessário
-        float sizeByHeight = bounds.size.z / 2f;
-        float sizeByWidth = bounds.size.x / (2f * _targetCamera.aspect);
+        float sizeByHeight = bounds.size.z / 3f;
+        float sizeByWidth = bounds.size.x / (3f * _targetCamera.aspect);
 
         _targetCamera.orthographicSize =
             Mathf.Max(sizeByHeight, sizeByWidth) * margin;
