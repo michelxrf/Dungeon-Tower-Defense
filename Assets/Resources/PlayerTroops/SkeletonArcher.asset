@@ -19,6 +19,6 @@ MonoBehaviour:
   cardArt: {fileID: -1502278121, guid: 6e982cec86ae5cb46a787faeb3773a6b, type: 3}
   health: 10
   visualRange: 1.8
-  damage: 1
-  attackInterval: 1
+  damage: 10
+  attackInterval: 2
   cost: 3

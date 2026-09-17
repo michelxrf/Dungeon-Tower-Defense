@@ -55,7 +55,7 @@ MonoBehaviour:
   _moveSpeed: 1
   _autoStart: 1
   _obstacleDetection: {fileID: 5229424182814469139}
-  _nodeReservationDistance: 0.5
+  _nodeReservationDistance: 0.6
   _pathIndex: 0
   _useRandomPath: 1
 --- !u!114 &-4135153639976696145
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   _floatingDamagePrefab: {fileID: 4848067062653241609, guid: f0d1c7e91f86b5245ba531f0ad2e02e0, type: 3}
-  _maxHealth: 2
+  _maxHealth: 15
 --- !u!114 &7735289307363624010
 MonoBehaviour:
   m_ObjectHideFlags: 0

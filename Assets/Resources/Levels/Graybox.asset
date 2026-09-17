@@ -20,9 +20,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
   - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
   - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  - {fileID: 11400000, guid: 5db3f45d247ce9348b516ba3f6cf66ce, type: 2}
-  speedMultiplierPerWave: 0.1
+  speedMultiplierPerWave: 0.2

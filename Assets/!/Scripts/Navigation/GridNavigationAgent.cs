@@ -18,7 +18,7 @@ public class GridNavigationAgent : MonoBehaviour
 
     [Header("Node Reservation Settings")]
     [Tooltip("The distance from the node at which the agent will consider itself to have reached the node. NEED TO BE HALF THE SIZE OF A GRID CELL")]
-    [SerializeField] private float _nodeReservationDistance = 0.5f;
+    [SerializeField] private float _nodeReservationDistance = 0.6f;
 
     [Header("Path Selection")]
     [SerializeField] private int _pathIndex = 0;

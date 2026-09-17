@@ -117,7 +117,7 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("Level completed!");
             GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
-            FindAnyObjectByType<PauseScreen>().Show();
+            FindAnyObjectByType<WinScreen>().Show();
             OnLevelCompleted?.Invoke();
         }
         else
@@ -147,7 +147,7 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("Game Over!");
         GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
-        FindAnyObjectByType<PauseScreen>().Show();
+        FindAnyObjectByType<GameOverScreen>().Show();
         PauseGame();
         OnLevelFailed?.Invoke();
     }

@@ -20,7 +20,7 @@ public class Attack : MonoBehaviour
 
     private void Start()
     {
-        SyncDamageFromSetup();
+        SetupStats();
         TryPerformAttack();
     }
 
@@ -140,11 +140,12 @@ public class Attack : MonoBehaviour
         TryPerformAttack();
     }
 
-    private void SyncDamageFromSetup()
+    private void SetupStats()
     {
         if (TryGetComponent(out TroopSetup troopSetup) && troopSetup.TroopSO != null)
         {
             _damage = troopSetup.TroopSO.damage;
+            _cooldownTime = troopSetup.TroopSO.attackInterval;
         }
     }
 }

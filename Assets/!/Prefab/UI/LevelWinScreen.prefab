@@ -122,7 +122,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7351325946099777845}
-        m_TargetAssemblyTypeName: GameOverScreen, Assembly-CSharp
+        m_TargetAssemblyTypeName: WinScreen, Assembly-CSharp
         m_MethodName: RestartClicked
         m_Mode: 1
         m_Arguments:
@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 7351325946099777845}
   - component: {fileID: 3336790599015548312}
   m_Layer: 5
-  m_Name: GameOverScreen
+  m_Name: LevelWinScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,9 +457,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5703991834720841677}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9385888a638543f2b14bdac3b6453327, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e0fe6fb338c410783c231d398da6e97, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameOverScreen
+  m_EditorClassIdentifier: Assembly-CSharp::WinScreen
 --- !u!225 &3336790599015548312
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 8721792960572674289}
   - component: {fileID: 3962361673074753407}
   m_Layer: 5
-  m_Name: GameOverText
+  m_Name: WinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: Win!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
   m_sharedMaterial: {fileID: -4151694044165900202, guid: c47b6fcf8b04e1b4684cd59fcb0cbf3f, type: 2}
