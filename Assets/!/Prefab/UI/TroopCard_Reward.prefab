@@ -158,9 +158,21 @@ MonoBehaviour:
   _cardArt: {fileID: 7950376500433334974}
   _cardName: {fileID: 1351946525847829150}
   _cost: {fileID: 6121138530212359883}
+  _level: {fileID: 3328146930734957044}
 --- !u!114 &1351946525847829150 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2068564556691251196, guid: 1d8ab519ec6f5d34f879efb7a745cb68, type: 3}
+  m_PrefabInstance: {fileID: 1042038724246906210}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &3328146930734957044 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2331145739292615830, guid: 1d8ab519ec6f5d34f879efb7a745cb68, type: 3}
   m_PrefabInstance: {fileID: 1042038724246906210}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

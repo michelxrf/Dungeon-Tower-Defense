@@ -43,10 +43,10 @@ public class CardRewardScreen : MonoBehaviour
     public void ConfirmSelection()
     {
         // Logic to confirm the selected card and proceed
+        LevelManager.Instance.AddNewTroop(_selectedReward);
         _selectedReward = null;
         HideCardRewards();
         OnRewardPicked?.Invoke();
-        LevelManager.Instance.AddNewTroop(_selectedReward);
         LevelManager.Instance.Unpause();
     }
 

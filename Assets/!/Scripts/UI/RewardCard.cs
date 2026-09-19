@@ -8,6 +8,7 @@ public class RewardCard : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image _cardArt;
     [SerializeField] private TMP_Text _cardName;
     [SerializeField] private TMP_Text _cost;
+    [SerializeField] private TMP_Text _level;
 
     private bool _selected = false;
     private TroopData _data;
@@ -18,15 +19,25 @@ public class RewardCard : MonoBehaviour, IPointerClickHandler
     {
         _cardRewardScreen = cardRewardScreen;
         _troopSO = data;
+        _data = data != null ? new TroopData(data) : null;
 
         if (data != null)
         {
             if (data.cardArt != null)
             {
-                _cardArt.sprite = data.cardArt;
+                _cardArt.sprite = _data.cardArt;
             }
-            _cardName.text = data.displayName;
-            _cost.text = _troopSO.cost.ToString();
+            _cardName.text = _data.displayName;
+            _cost.text = _data.cost.ToString();
+
+            if(LevelManager.Instance.GetPlayerTroopsHand().Exists(t => t.displayName == _data.displayName))
+            {
+                _level.text = "Lv: " + (LevelManager.Instance.GetPlayerTroopsHand().Find(t => t.displayName == _data.displayName).level + 1).ToString();
+            }
+            else
+            {
+                _level.text = "Lv: 1";
+            }
         }
     }
 

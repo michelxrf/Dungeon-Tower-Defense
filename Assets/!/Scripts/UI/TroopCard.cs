@@ -8,11 +8,10 @@ using UnityEngine.UI;
 
 public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    [SerializeField] private TroopSO _troopSO;
-
     [Header("References")]
     [SerializeField] private Image _cardArt;
     [SerializeField] private TMP_Text _cardName;
+    [SerializeField] private TMP_Text _levelText;
     [SerializeField] private GameObject _dragIcon;
     [SerializeField] private GameObject _lock;
     [SerializeField] private TMP_Text _cost;
@@ -20,24 +19,9 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     private TroopData _data;
     private bool _isLocked;
 
-    private void Awake()
-    {
-        _data = new TroopData(_troopSO);
-        _cardArt.sprite = _data.cardArt;
-        _cardName.text = _data.displayName;
-    }
-
     void Start()
     {
-        if(LevelManager.Instance != null)
-        {
-            VerifyAffordability(LevelManager.Instance.GetCurrentMoney());
-            LevelManager.Instance.OnMoneyChanged += VerifyAffordability;
-        }
-
-        if(_troopSO != null)
-            SetupCard(new TroopData(_troopSO));
-
+        LevelManager.Instance.OnMoneyChanged += VerifyAffordability;
         _dragIcon.SetActive(false);
     }
 
@@ -49,20 +33,33 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     private void VerifyAffordability(int currentMoney)
     {
-        LockCard(_troopSO.cost > currentMoney);
+        LockCard(_data.cost > currentMoney);
     }
 
-    public void SetupCard(TroopData _data)
+    public void SetupCard(TroopData data)
     {
-        if (_data != null)
+        if (data != null)
         {
+            _data = data;
             // Do something with the troop data
-            if (_data.cardArt != null)
+            if (data.cardArt != null)
             {
-                _cardArt.sprite = _data.cardArt;
+                _cardArt.sprite = data.cardArt;
             }
-            _cardName.text = _data.displayName;
-            _cost.text = _troopSO.cost.ToString();
+            _cardName.text = data.displayName;
+            _cost.text = _data.cost.ToString();
+            VerifyAffordability(LevelManager.Instance.GetCurrentMoney());
+            UpdateLevelText(data);
+
+            Debug.Log($"TroopCard Setup: Name={data.displayName}, Level={data.level}, Cost={_data.cost}");
+        }
+    }
+
+    private void UpdateLevelText(TroopData data)
+    {
+        if (_levelText != null && data != null)
+        {
+            _levelText.text = $"Lv. {data.level}";
         }
     }
     private void OnDestroy()
@@ -118,7 +115,7 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
                 if(!slot.IsOccupied && slot.GetTroopSlotType() == _data.troopSlotType)
                 {
                     slot.SetTroopData(_data);
-                    LevelManager.Instance.RemoveMoney(_troopSO.cost);
+                    LevelManager.Instance.RemoveMoney(_data.cost);
                 }
 
             }

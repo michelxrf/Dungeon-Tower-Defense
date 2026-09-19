@@ -17,24 +17,39 @@ public class TargetAquisition : MonoBehaviour
 
     private void Start()
     {
-        SyncRangeFromSetup();
-        GetComponent<ShowDetection>().Setup(_range);
+        SetupStats();
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnTroopLeveledUp += SetupStats;
+        }
     }
 
     private void OnValidate()
     {
-        SyncRangeFromSetup();
-        if (TryGetComponent(out ShowDetection showDetection))
+        SetupStats();
+    }
+
+    private void OnDestroy()
+    {
+        if (LevelManager.Instance != null)
         {
-            showDetection.Setup(_range);
+            LevelManager.Instance.OnTroopLeveledUp -= SetupStats;
         }
     }
 
-    private void SyncRangeFromSetup()
+    private void SetupStats()
     {
-        if (_troopSetup != null && _troopSetup.TroopSO != null)
+        if (_troopSetup != null)
         {
-            _range = _troopSetup.TroopSO.visualRange;
+            TroopData troopData = _troopSetup.GetTroopData();
+            if (troopData != null)
+            {
+                _range = troopData.visualRange;
+            }
+        }
+        if (TryGetComponent(out ShowDetection showDetection))
+        {
+            showDetection.Setup(_range);
         }
     }
 

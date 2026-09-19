@@ -17,8 +17,13 @@ MonoBehaviour:
   troopSlotType: 1
   prefab: {fileID: 433596546146712997, guid: 0a9fb6c44cbbed14b840a79d15d9177f, type: 3}
   cardArt: {fileID: -1502278121, guid: 6e982cec86ae5cb46a787faeb3773a6b, type: 3}
-  health: 10
+  health: 0
   visualRange: 1.8
   damage: 10
   attackInterval: 2
   cost: 3
+  level: 1
+  healthUpPerLevel: 0
+  damageUpPerLevel: 1
+  rangeUpPerLevel: 0
+  attackIntervalDownPerLevel: 0.05

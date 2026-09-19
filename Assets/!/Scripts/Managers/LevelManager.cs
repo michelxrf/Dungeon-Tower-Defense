@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public Action OnHandChanged;
     public Action OnPause;
     public Action OnResume;
+    public Action OnTroopLeveledUp;
 
     private void Awake()
     {
@@ -57,9 +59,17 @@ public class LevelManager : MonoBehaviour
 
     public void AddNewTroop(TroopData troop)
     {
-        if(_playerTroopsHand.Contains(troop))
+        if (troop == null)
         {
-            Debug.Log("Troop already exists in the player's hand. Should level up, not implemented");
+            Debug.LogWarning("AddNewTroop called with null troop data.");
+            return;
+        }
+
+        int troopIndex = _playerTroopsHand.FindIndex(t => t.displayName == troop.displayName);
+        if (troopIndex != -1)
+        {
+            _playerTroopsHand[troopIndex].LevelUp();
+            OnTroopLeveledUp?.Invoke();
         }
         else
         {

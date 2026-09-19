@@ -18,6 +18,17 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
+        SetupStats();
+        LevelManager.Instance.OnTroopLeveledUp += SetupStats;
+    }
+
+    private void SetupStats()
+    {
+        if (TryGetComponent(out TroopSetup troopSetup) && troopSetup.GetTroopData() != null)
+        {
+            _maxHealth = troopSetup.GetTroopData().health;
+            _currentHealth = _maxHealth;
+        }
         OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
 
@@ -45,5 +56,10 @@ public class Health : MonoBehaviour
     {
         OnDeath?.Invoke();
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.Instance.OnTroopLeveledUp -= SetupStats;
     }
 }

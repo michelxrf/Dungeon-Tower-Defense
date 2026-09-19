@@ -21,6 +21,7 @@ public class Attack : MonoBehaviour
     private void Start()
     {
         SetupStats();
+        LevelManager.Instance.OnTroopLeveledUp += SetupStats;
         TryPerformAttack();
     }
 
@@ -32,6 +33,10 @@ public class Attack : MonoBehaviour
     private void OnDestroy()
     {
         UnsubscribeFromTargetAcquired();
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnTroopLeveledUp -= SetupStats;
+        }
     }
 
     private void Update()
@@ -71,7 +76,6 @@ public class Attack : MonoBehaviour
     {
         RotateTowardTarget(target.transform);
         target.TakeDamage(_damage);
-        Debug.Log($"Attacked {target.name} for {_damage} damage.");
 
         StartCooldown();
     }
@@ -142,10 +146,12 @@ public class Attack : MonoBehaviour
 
     private void SetupStats()
     {
-        if (TryGetComponent(out TroopSetup troopSetup) && troopSetup.TroopSO != null)
+        if (TryGetComponent(out TroopSetup troopSetup) && troopSetup.GetTroopData() != null)
         {
-            _damage = troopSetup.TroopSO.damage;
-            _cooldownTime = troopSetup.TroopSO.attackInterval;
+            _damage = troopSetup.GetTroopData().damage;
+            _cooldownTime = troopSetup.GetTroopData().attackInterval;
+
+            Debug.Log($"Attack stats updated: Damage={_damage}, CooldownTime={_cooldownTime}");
         }
     }
 }

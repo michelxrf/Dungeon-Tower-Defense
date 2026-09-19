@@ -10,9 +10,16 @@ public class TroopSO : ScriptableObject
     public GameObject prefab;
     public Sprite cardArt;
 
-    public float health;
+    public int health;
     public float visualRange;
     public int damage;
     public float attackInterval;
     public int cost;
+
+    [Header("Leveling")]
+    public int level = 1;
+    public int healthUpPerLevel;
+    public int damageUpPerLevel;
+    public float rangeUpPerLevel;
+    public float attackIntervalDownPerLevel;
 }
