@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 6396904059984145191}
   - component: {fileID: 5018102479139430870}
   - component: {fileID: 7460753715725154734}
+  - component: {fileID: 7771073931323499035}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -271,6 +272,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7771073931323499035}
+        m_TargetAssemblyTypeName: UiSoundTrigger, Assembly-CSharp
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7460753715725154734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,3 +300,16 @@ MonoBehaviour:
   _pulseInterval: 3
   _curveAnimation: 32
   _scaleIntensity: 1.05
+--- !u!114 &7771073931323499035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8718867189336560651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f74c39a82c943244b606fe4da0b3830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UiSoundTrigger
+  _clickSound: {fileID: 8300000, guid: f8f09a55c2c553542a4f320a8b63411e, type: 3}

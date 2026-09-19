@@ -159,6 +159,7 @@ MonoBehaviour:
   _cardName: {fileID: 1351946525847829150}
   _cost: {fileID: 6121138530212359883}
   _level: {fileID: 3328146930734957044}
+  _cardClickSound: {fileID: 8300000, guid: 6596c77709222854bbd29cbf791c9dc6, type: 3}
 --- !u!114 &1351946525847829150 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2068564556691251196, guid: 1d8ab519ec6f5d34f879efb7a745cb68, type: 3}

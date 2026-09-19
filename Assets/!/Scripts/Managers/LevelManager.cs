@@ -12,6 +12,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int _startingMoney;
     [SerializeField] private LevelSO _levelData;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip _winSound;
+    [SerializeField] private AudioClip _loseSound;
+    [SerializeField] private AudioClip _waveCompleteSound;
+
     private int _currentWaveIndex = 0;
     private int _money;
     private bool _isPaused = true;
@@ -126,6 +131,7 @@ public class LevelManager : MonoBehaviour
         if (_currentWaveIndex + 1 >= _levelData.waves.Length)
         {
             Debug.Log("Level completed!");
+            AudioManager.Instance.PlaySFX(_winSound);
             GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
             FindAnyObjectByType<WinScreen>().Show();
             OnLevelCompleted?.Invoke();
@@ -134,6 +140,7 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log($"Wave {_currentWaveIndex} completed. Preparing next wave.");
             _currentWaveIndex++;
+            AudioManager.Instance.PlaySFX(_waveCompleteSound);
             GameManager.Instance.WaveEnded(_levelData, _currentWaveIndex, _money);
             OnWaveEnded?.Invoke();
         }
@@ -156,6 +163,7 @@ public class LevelManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over!");
+        AudioManager.Instance.PlaySFX(_loseSound);
         GameManager.Instance.LevelEnded(_levelData, _currentWaveIndex, _money);
         FindAnyObjectByType<GameOverScreen>().Show();
         PauseGame();

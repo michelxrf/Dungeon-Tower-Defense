@@ -4,6 +4,7 @@ public class TroopSlot : MonoBehaviour
 {
     [SerializeField] private GameObject _freeIndicator;
     [SerializeField] private TroopSlotType _troopSlotType;
+    [SerializeField] private AudioClip _troopSpawnSound;
 
     private bool _isOccupied = false;
     public bool IsOccupied => _isOccupied;
@@ -25,7 +26,9 @@ public class TroopSlot : MonoBehaviour
         _troopData = troopData;
         _isOccupied = true;
 
+        AudioManager.Instance.PlaySFX(_troopSpawnSound);
         GameObject instantiatedTroop = Instantiate(_troopData.prefab, transform.position, Quaternion.identity, transform);
+
     }
 
     public void ClearTroopData()

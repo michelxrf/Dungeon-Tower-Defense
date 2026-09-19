@@ -11,6 +11,9 @@ public class Health : MonoBehaviour
     public Action<float, float> OnHealthChanged;
     public Action OnDeath;
 
+    [SerializeField] private AudioClip _hurtSound;
+    [SerializeField] private AudioClip _deathSound;
+
     private void Awake()
     {
         _currentHealth = _maxHealth;
@@ -42,6 +45,10 @@ public class Health : MonoBehaviour
         {
             Die();
         }
+        else
+        {
+            AudioManager.Instance.PlaySFX(_hurtSound);
+        }
     }
 
     private void SpawnDamageIndicator(int damage)
@@ -55,6 +62,7 @@ public class Health : MonoBehaviour
     private void Die()
     {
         OnDeath?.Invoke();
+        AudioManager.Instance.PlaySFX(_deathSound);
         Destroy(gameObject);
     }
 

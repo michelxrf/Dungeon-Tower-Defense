@@ -15,7 +15,10 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     [SerializeField] private GameObject _dragIcon;
     [SerializeField] private GameObject _lock;
     [SerializeField] private TMP_Text _cost;
-    
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip _cardClickSound;
+
     private TroopData _data;
     private bool _isLocked;
 
@@ -73,6 +76,8 @@ public class TroopCard : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (_isLocked) return;
+        
+        AudioManager.Instance.PlaySFX(_cardClickSound);
 
         _dragIcon.SetActive(true);
         TroopSlot[] slots = FindObjectsByType<TroopSlot>();

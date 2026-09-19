@@ -135,6 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   _floatingDamagePrefab: {fileID: 4848067062653241609, guid: f0d1c7e91f86b5245ba531f0ad2e02e0, type: 3}
   _maxHealth: 15
+  _hurtSound: {fileID: 8300000, guid: a2e32f19c571c044f95113eb23cf86fc, type: 3}
+  _deathSound: {fileID: 8300000, guid: a2e32f19c571c044f95113eb23cf86fc, type: 3}
 --- !u!114 &7735289307363624010
 MonoBehaviour:
   m_ObjectHideFlags: 0

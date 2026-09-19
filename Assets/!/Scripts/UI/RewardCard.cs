@@ -9,6 +9,7 @@ public class RewardCard : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text _cardName;
     [SerializeField] private TMP_Text _cost;
     [SerializeField] private TMP_Text _level;
+    [SerializeField] private AudioClip _cardClickSound;
 
     private bool _selected = false;
     private TroopData _data;
@@ -46,6 +47,7 @@ public class RewardCard : MonoBehaviour, IPointerClickHandler
         if (!_selected)
         {
             _cardRewardScreen.SelectReward(_data, gameObject);
+            AudioManager.Instance.PlaySFX(_cardClickSound);
         }
     }
 }

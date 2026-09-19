@@ -94,13 +94,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc18a4a7aa42917498f5d3b032b44dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TroopCard
-  _troopSO: {fileID: 11400000, guid: 1440c75a6f9f55340a3cda52860c96c3, type: 2}
   _cardArt: {fileID: 145278264717110055}
   _cardName: {fileID: 2068564556691251196}
   _levelText: {fileID: 2331145739292615830}
   _dragIcon: {fileID: 1974479442532399498}
   _lock: {fileID: 1795104202677655323}
   _cost: {fileID: 6522540182761343913}
+  _cardClickSound: {fileID: 8300000, guid: 6596c77709222854bbd29cbf791c9dc6, type: 3}
 --- !u!1 &1450141119116619656
 GameObject:
   m_ObjectHideFlags: 0

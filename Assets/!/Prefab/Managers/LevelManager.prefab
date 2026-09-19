@@ -46,3 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   _startingMoney: 5
   _levelData: {fileID: 11400000, guid: b49e609162a0be8478065d61ff9f49b2, type: 2}
+  _winSound: {fileID: 8300000, guid: 3d17f1e674701d249be9e812c42cad17, type: 3}
+  _loseSound: {fileID: 8300000, guid: 0c1a0010ca6b8f3468f9fc33927a3d23, type: 3}
+  _waveCompleteSound: {fileID: 8300000, guid: ab1aff6d192ae6b4d94eb786265d0036, type: 3}

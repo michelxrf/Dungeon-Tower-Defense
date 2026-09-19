@@ -137,6 +137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TroopSlot
   _freeIndicator: {fileID: 599879633795629419}
+  _troopSlotType: 0
+  _troopSpawnSound: {fileID: 8300000, guid: 77564a7d19a0f2a46851a9e8441e95e4, type: 3}
 --- !u!65 &5211989074510360278
 BoxCollider:
   m_ObjectHideFlags: 0
