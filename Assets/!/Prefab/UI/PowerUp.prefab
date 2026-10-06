@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7101307338061191278}
   - component: {fileID: 3257801384392048401}
   - component: {fileID: 7409092639850584308}
+  - component: {fileID: 7612572435358148677}
+  - component: {fileID: 4775167477588349866}
   m_Layer: 5
   m_Name: PowerUp
   m_TagString: Untagged
@@ -38,8 +40,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -200, y: 100}
+  m_AnchoredPosition: {x: -14.398987, y: 0}
+  m_SizeDelta: {x: -228.798, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7101307338061191278
 MonoBehaviour:
@@ -105,6 +107,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7612572435358148677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500927463356065287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f512a33d33a3b49af7b90da69a38cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpUI
+  powerUpNameText: {fileID: 2777731312978369807}
+  priceText: {fileID: 9221519816573639468}
+  buyButton: {fileID: 6830415270836830304}
+--- !u!114 &4775167477588349866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500927463356065287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: 150
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &1464178223091339190
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,8 +419,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278190217
+  m_fontColor: {r: 0.5377358, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -540,8 +577,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278190217
+  m_fontColor: {r: 0.5377358, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -713,7 +750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3044345755018056622, guid: 20c1c2a139df81f4da3743de928ea697, type: 3}
       propertyPath: m_text
-      value: Get
+      value: Buy
       objectReference: {fileID: 0}
     - target: {fileID: 3044345755018056622, guid: 20c1c2a139df81f4da3743de928ea697, type: 3}
       propertyPath: m_fontSize
@@ -736,6 +773,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1434198694874509483, guid: 20c1c2a139df81f4da3743de928ea697, type: 3}
   m_PrefabInstance: {fileID: 1975219733040914870}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6830415270836830304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5018102479139430870, guid: 20c1c2a139df81f4da3743de928ea697, type: 3}
+  m_PrefabInstance: {fileID: 1975219733040914870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7176134585230046653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &7176134585230046653 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8718867189336560651, guid: 20c1c2a139df81f4da3743de928ea697, type: 3}

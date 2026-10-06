@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    private PlayerSave playerData;
+    [System.NonSerialized] private PlayerSave playerData;
 
     private void Awake()
     {
